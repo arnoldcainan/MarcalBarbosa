@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Imprimir Etiquetas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* -------------------------------------------
+           1. ESTILO DE TELA (Visualização Tech Ocean)
+           ------------------------------------------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            /* Fundo Animado igual ao resto do sistema */
+            background: linear-gradient(-45deg, #1A2980, #26D0CE, #005c97, #43cea2);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* Barra de Controle (Glassmorphism) */
+        .control-bar {
+            width: 210mm; /* Mesma largura do papel */
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            padding: 15px 25px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .page-title {
+            color: #1A2980;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        /* Botões Estilizados */
+        .btn {
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn:active { transform: scale(0.95); }
+
+        .btn-voltar {
+            background-color: #f8f9fa;
+            color: #1A2980;
+            border: 1px solid #ddd;
+        }
+        .btn-print {
+            background-color: #1A2980;
+            color: white;
+            box-shadow: 0 4px 10px rgba(26, 41, 128, 0.3);
+        }
+        .btn-print:hover { background-color: #0f172a; }
+
+        /* Folha de Papel (Preview) */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 5mm; /* Margens padrão Pimaco */
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Sombra para parecer papel */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 Colunas */
+            grid-auto-rows: 25.4mm; /* Altura exata da etiqueta (1 polegada) */
+            gap: 0; /* Pimaco geralmente não tem gap horizontal, ajustamos no padding da etiqueta */
+        }
+
+        /* A Etiqueta Individual */
+        .etiqueta {
+            padding: 5px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-family: Arial, sans-serif; /* Fonte legível para Correios */
+            font-size: 11px;
+            color: black;
+            border: 1px dashed #eee; /* Guia visual na tela apenas */
+            overflow: hidden;
+        }
+
+        /* -------------------------------------------
+           2. CONFIGURAÇÃO DE IMPRESSÃO (REAL)
+           ------------------------------------------- */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0; /* Remove margens do navegador */
+            }
+            body {
+                background: none;
+                margin: 0;
+                display: block;
+                padding: 0;
+            }
+
+            /* Esconde a barra de botões e fundo */
+            .no-print, .control-bar {
+                display: none !important;
+            }
+
+            .page {
+                width: 100%;
+                border: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 12mm 5mm; /* Margem física da folha */
+            }
+
+            .etiqueta {
+                border: none; /* Remove pontilhado */
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="control-bar no-print">
+        <div class="page-title">
+            <i class="bi bi-printer-fill"></i> Pré-visualização
+        </div>
+        <div>
+            <button onclick="window.close()" class="btn btn-voltar">
+                <i class="bi bi-x-lg"></i> Fechar
+            </button>
+
+            <button onclick="window.print()" class="btn btn-print">
+                <i class="bi bi-printer"></i> Imprimir Agora
+            </button>
+        </div>
+    </div>
+
+    <div class="page">
+        {% for contato in contatos %}
+        <div class="etiqueta">
+            <div style="font-weight: bold; font-size: 12px; text-transform: uppercase;">
+                {{ contato.nome }}
+            </div>
+
+            {% if contato.turma %}
+                <div style="font-size: 10px; margin-bottom: 2px;">
+                    {{ contato.turma }}{% if contato.ano %} - {{ contato.ano }}{% endif %}
+                </div>
+            {% endif %}
+
+            <div style="margin-top: 2px;">
+                {{ contato.endereco }}, {{ contato.numero }} {{ contato.complemento }}<br>
+                {{ contato.bairro }}<br>
+                {{ contato.cidade }} - {{ contato.estado }}<br>
+                <strong>CEP: {{ contato.cep }}</strong>
+            </div>
+        </div>
+        {% empty %}
+            <div style="grid-column: 1/-1; text-align: center; padding: 50px; font-size: 14px; color: #666;">
+                Nenhum contato selecionado. Volte e selecione alguém na lista.
+            </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

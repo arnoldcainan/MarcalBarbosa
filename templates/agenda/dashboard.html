@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Gestor de Amigos{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 1. Fundo Global Animado (O mesmo da Home/Login) */
+    body {
+        background: linear-gradient(-45deg, #1A2980, #26D0CE, #005c97, #43cea2);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        min-height: 100vh;
+    }
+    @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+    /* 2. Título da Página (Branco com Sombra para contraste no gradiente) */
+    .page-title {
+        color: white;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        font-weight: 700;
+    }
+    .page-subtitle {
+        color: rgba(255,255,255,0.9);
+        font-weight: 500;
+    }
+
+    /* 3. Glass Cards (Estilo "Tech Ocean") */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%; /* Para cards da mesma altura */
+        color: #1A2980; /* Texto Azul Escuro */
+        overflow: hidden; /* Para o cabeçalho não sair da borda */
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    /* 4. Ícones Circulares */
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    .icon-blue { background: rgba(26, 41, 128, 0.1); color: #1A2980; }
+    .icon-green { background: rgba(38, 208, 206, 0.1); color: #009688; }
+    .icon-orange { background: rgba(255, 152, 0, 0.1); color: #f57c00; }
+
+    /* 5. Botões Customizados */
+    .btn-glass-primary {
+        background: #1A2980; color: white; border: none; border-radius: 50px; padding: 10px 25px; font-weight: 600; transition: 0.3s;
+    }
+    .btn-glass-primary:hover { background: #0f172a; color: white; transform: scale(1.02); }
+
+    .btn-glass-outline {
+        background: transparent; border: 2px solid #1A2980; color: #1A2980; border-radius: 50px; padding: 8px 25px; font-weight: 600; transition: 0.3s;
+    }
+    .btn-glass-outline:hover { background: #1A2980; color: white; }
+
+    /* 6. Listas (Aniversariantes) */
+    .list-group-item {
+        background: transparent;
+        border-color: rgba(0,0,0,0.05);
+        color: #1A2980;
+        padding: 1rem 1.25rem;
+    }
+    .badge-custom {
+        background-color: #f57c00; /* Laranja para destaque */
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-5 mt-4">
+    <div class="col-md-12 text-white">
+        <h2 class="page-title"><i class="bi bi-speedometer2 me-2"></i>Painel de Controle</h2>
+        <p class="page-subtitle">Bem-vindo de volta, {{ user.first_name|default:user.username }}!</p>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="glass-card p-4 d-flex flex-column justify-content-between">
+            <div>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="icon-box icon-blue">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <a href="{% url 'lista_contatos' %}" class="btn btn-sm btn-glass-outline" style="border-width: 1px; padding: 5px 15px;">
+                        Ver Agenda
+                    </a>
+                </div>
+                <h5 class="mt-3 fw-bold text-muted text-uppercase small ls-1">Total de Amigos</h5>
+                <p class="display-3 fw-bold mb-0" style="color: #1A2980;">{{ total_contatos }}</p>
+            </div>
+            <div class="mt-3">
+                <small class="text-muted"><i class="bi bi-check-circle-fill text-success me-1"></i> Contatos sincronizados</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="glass-card p-4">
+            <div class="icon-box icon-green">
+                <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+            <h5 class="fw-bold mb-4" style="color: #1A2980;">Ações Rápidas</h5>
+
+            <div class="d-grid gap-3">
+                <a href="{% url 'criar_contato' %}" class="btn btn-glass-primary">
+                    <i class="bi bi-person-plus-fill me-2"></i> Novo Contato
+                </a>
+
+                <a href="{% url 'lista_contatos' %}" class="btn btn-glass-outline">
+                    <i class="bi bi-printer-fill me-2"></i> Imprimir Etiquetas
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="glass-card h-100">
+            <div class="p-4 border-bottom border-light">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box icon-orange mb-0 me-3" style="width: 45px; height: 45px; font-size: 1.2rem;">
+                        <i class="bi bi-cake2-fill"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0" style="color: #1A2980;">Aniversariantes</h5>
+                </div>
+                <small class="text-muted ms-1">Próximos 7 dias</small>
+            </div>
+
+            <ul class="list-group list-group-flush">
+                {% for amigo in aniversariantes %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">
+                            <i class="bi bi-person-fill me-2 text-muted"></i>{{ amigo.nome }}
+                        </span>
+                        <span class="fw-bold">
+                            <i class=" text-muted"></i>{{ amigo.telefone }}
+                        </span>
+                        <span class="badge badge-custom rounded-pill shadow-sm">
+                            {{ amigo.data_nascimento|date:"d/m" }}
+                        </span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-center py-5 text-muted">
+                        <i class="bi bi-calendar-x display-6 d-block mb-3 opacity-50"></i>
+                        <span class="fst-italic">Ninguém sopra as velinhas esta semana.</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

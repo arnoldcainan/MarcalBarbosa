@@ -1,0 +1,26 @@
+# --- Python & Django ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+.DS_Store
+
+# --- Ambientes Virtuais ---
+.venv/
+venv/
+env/
+.env
+
+# --- IDEs (Configurações do Editor) ---
+.idea/
+.vscode/
+
+# --- Arquivos Estáticos e Mídia ---
+# Ignora a pasta onde o collectstatic reúne os arquivos (produção)
+staticfiles/
+# Ignora uploads de usuários (se houver no futuro)
+media/
+
+# --- Logs ---
+*.log

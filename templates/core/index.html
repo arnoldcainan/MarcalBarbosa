@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}Bem-vindo | Gestor de Amigos{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+    /* 1. Fundo Global Animado (Mantido o Tech Ocean) */
+    body {
+        font-family: 'Poppins', sans-serif;
+        /* Gradiente de fundo */
+        background: linear-gradient(-45deg, #1A2980, #26D0CE, #005c97, #43cea2);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        min-height: 100vh;
+        color: #1A2980; /* Cor padrão do texto agora é escura */
+    }
+
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* 2. Glassmorphism CLARO (Alto Contraste) */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85); /* Quase branco sólido */
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+
+        /* Força a cor do texto dentro dos cards para Azul Escuro */
+        color: #1A2980 !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
+        background: rgba(255, 255, 255, 0.95); /* Fica quase opaco ao passar o mouse */
+    }
+
+    /* Texto de cabeçalhos dentro do card */
+    .glass-card h1, .glass-card h3 {
+        color: #0f172a; /* Quase preto para títulos */
+        font-weight: 700;
+    }
+
+    /* 3. Navbar Clara */
+    .navbar {
+        background: rgba(255, 255, 255, 0.9) !important; /* Navbar branca */
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Links da Navbar Escuros */
+    .navbar-brand, .nav-link {
+        color: #1A2980 !important; /* Azul Escuro */
+        font-weight: 600;
+    }
+    .nav-link:hover {
+        color: #26D0CE !important; /* Ciano no hover */
+    }
+
+    /* Ícone do menu hambúrguer (mobile) escuro */
+    .navbar-toggler {
+        border-color: rgba(26, 41, 128, 0.5);
+    }
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(26, 41, 128, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+    }
+
+    /* Botões */
+    .btn-glass-primary {
+        background: #1A2980; /* Botão Azul Escuro */
+        color: white; /* Texto Branco */
+        font-weight: bold;
+        border: none;
+        border-radius: 50px;
+        padding: 12px 30px;
+        box-shadow: 0 4px 15px rgba(26, 41, 128, 0.3);
+        transition: all 0.3s;
+    }
+    .btn-glass-primary:hover {
+        background: #0f172a; /* Mais escuro ainda no hover */
+        transform: scale(1.05);
+        color: white;
+    }
+
+    /* Ícones dentro dos círculos */
+    .icon-box {
+        background: rgba(26, 41, 128, 0.1); /* Fundo azul bem clarinho */
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        font-size: 2.5rem;
+
+        /* Cor Sólida Escura para o ícone */
+        color: #1A2980;
+    }
+
+    footer {
+        background-color: transparent !important;
+        color: rgba(255, 255, 255, 0.9) !important; /* Footer mantém branco pois está direto no fundo */
+        font-weight: 500;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container px-4 py-5 my-5">
+    <div class="glass-card p-5 text-center text-white" data-aos="zoom-in" data-aos-duration="1000">
+        <div class="mb-4">
+            <i class="bi bi-people-fill display-1" style="text-shadow: 0 4px 8px rgba(0,0,0,0.2);"></i>
+        </div>
+
+        <h1 class="display-4 fw-bold mb-3">Gestor de Amigos</h1>
+        <div class="col-lg-8 mx-auto">
+            <p class="lead mb-4 fw-normal" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
+                Nunca mais esqueça o aniversário ou o endereço dos seus amigos.
+                Uma plataforma inteligente, bonita e simples para organizar quem importa para você.
+            </p>
+
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-glass-primary btn-lg px-4 gap-3">
+                        <i class="bi bi-speedometer2"></i> Ir para Dashboard
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-glass-primary btn-lg px-4 gap-3">
+                        <i class="bi bi-box-arrow-in-right"></i> Acessar Sistema
+                    </a>
+                    <a href="{% url 'signup' %}" class="btn btn-outline-light btn-lg px-4 rounded-pill">
+                        Criar Conta
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4 py-3 row-cols-1 row-cols-lg-3">
+
+        <div class="col" data-aos="fade-up" data-aos-delay="100">
+            <div class="glass-card h-100 p-4 text-white text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="icon-box text-primary">
+                        <i class="bi bi-cake2-fill"></i>
+                    </div>
+                </div>
+                <h3 class="fs-2 fw-bold">Aniversariantes</h3>
+                <p>Receba alertas visuais semanais. O sistema calcula automaticamente quem vai soprar as velinhas baseado na data de nascimento.</p>
+            </div>
+        </div>
+
+        <div class="col" data-aos="fade-up" data-aos-delay="200">
+            <div class="glass-card h-100 p-4 text-white text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="icon-box text-success">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                </div>
+                <h3 class="fs-2 fw-bold">Endereços Smart</h3>
+                <p>Integração total com a API ViaCEP. Digite apenas o código postal e nós preenchemos rua, bairro e cidade instantaneamente.</p>
+            </div>
+        </div>
+
+        <div class="col" data-aos="fade-up" data-aos-delay="300">
+            <div class="glass-card h-100 p-4 text-white text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="icon-box text-warning">
+                        <i class="bi bi-printer-fill"></i>
+                    </div>
+                </div>
+                <h3 class="fs-2 fw-bold">Etiquetas PDF</h3>
+                <p>Gere layouts de impressão perfeitos para correspondências. Selecione seus amigos e imprima etiquetas em segundos.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+{% endblock %}
