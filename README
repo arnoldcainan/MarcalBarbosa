@@ -1,0 +1,118 @@
+# Gestor de Amigos & Agenda Escolar
+
+![Python](https://img.shields.io/badge/python-3.12-blue.svg)
+![Django](https://img.shields.io/badge/django-5.0-green.svg)
+![Bootstrap](https://img.shields.io/badge/bootstrap-5.3-purple.svg)
+![Status](https://img.shields.io/badge/status-concluído-success)
+
+> Um sistema web moderno, responsivo e seguro para gerenciamento de contatos pessoais e escolares, focado em produtividade e experiência do usuário (UX).
+
+
+##  Sobre o Projeto
+
+Este projeto foi desenvolvido para atender à necessidade de organização de contatos de um Diretor Escolar. O sistema vai além de uma agenda comum, permitindo filtrar alunos por **Turma e Série**, gerenciar aniversariantes da semana e automatizar a criação de **etiquetas de correspondência** para impressão.
+
+O diferencial técnico está na interface **"Tech Ocean"**, utilizando conceitos de **Glassmorphism** (efeito de vidro), animações CSS e uma arquitetura **Mobile-First**.
+
+###  Funcionalidades Principais
+
+* ** Autenticação Completa:** Login, Cadastro e Recuperação de Senha (com segurança por usuário - cada um vê apenas sua agenda).
+* ** UI/UX Moderna:** Design responsivo com efeito Glassmorphism, avatares automáticos e animações suaves.
+* ** Dashboard Inteligente:** Resumo de contatos e card de **Aniversariantes da Semana** automático.
+* ** Integração ViaCEP:** Preenchimento automático de endereço (Rua, Bairro, Cidade) ao digitar o CEP.
+* ** Gerador de Etiquetas:** Seleção múltipla de contatos para gerar uma página de impressão formatada (padrão Pimaco/A4).
+* * Filtros Avançados:** Busca por nome, cidade, e filtros específicos para dados escolares (Turma/Ano) via Modal.
+* * Mobile Friendly:** Máscaras de input (Telefone/CEP) e teclados numéricos otimizados para celulares.
+
+---
+
+##  Tecnologias Utilizadas
+
+* **Backend:** Python 3, Django 5.
+* **Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript (Vanilla).
+* **Banco de Dados:** SQLite (Dev) / PostgreSQL (Produção).
+* **APIs & Libs:**
+    * `ViaCEP API` (Consulta de endereços).
+    * `IMask.js` (Máscaras de input).
+    * `Crispy Forms` (Renderização de formulários).
+    * `WhiteNoise` (Gestão de arquivos estáticos).
+
+---
+
+## Como Rodar o Projeto Localmente
+
+Siga os passos abaixo para executar o projeto na sua máquina:
+
+### Pré-requisitos
+* Python 3.10+ instalado.
+* Git instalado.
+
+### Instalação
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/arnoldcainan/MarcalBarbosa.git](https://github.com/arnoldcainan/MarcalBarbosa.git)
+    cd MarcalBarbosa
+    ```
+
+2.  **Crie e ative um ambiente virtual:**
+    ```bash
+    # Windows
+    python -m venv .venv
+    .venv\Scripts\activate
+
+    # Linux/Mac
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
+
+3.  **Instale as dependências:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Configure o Banco de Dados:**
+    ```bash
+    python manage.py migrate
+    ```
+
+5.  **Crie um Superusuário (para acessar o Admin):**
+    ```bash
+    python manage.py createsuperuser
+    ```
+
+6.  **Inicie o Servidor:**
+    ```bash
+    python manage.py runserver
+    ```
+
+Acesse `http://127.0.0.1:8000` no seu navegador.
+
+---
+
+## 📦 Deploy (Produção)
+
+O projeto está configurado para deploy fácil em plataformas como **Railway** ou **Render**.
+
+Possui arquivos de configuração:
+* `Procfile` (para Gunicorn).
+* `runtime.txt` (versão do Python).
+* Configuração híbrida de Banco de Dados (`dj_database_url`) para alternar automaticamente entre SQLite (local) e PostgreSQL (nuvem).
+
+---
+
+## Contribuição
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+
+---
+
+## Licença
+
+Este projeto está sob a licença MIT.
+
+---
+
+<div align="center">
+  Developed with 💙 by Arnold Cainan
+</div>
