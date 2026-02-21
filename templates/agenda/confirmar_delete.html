@@ -1,13 +1,124 @@
-{% extends 'base.html' %} {% block content %}
-  <div class="container mt-5">
-    <h2>Confirmar Exclusão</h2>
+{% extends 'base.html' %}
 
-    <p>Você tem certeza que deseja deletar o contato <strong>{{ object.nome }}</strong>?</p>
+{% block title %}Excluir Contato | Gestor de Amigos{% endblock %}
 
-    <form method="POST">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Sim, quero deletar</button>
-      <a href="{% url 'lista_contatos' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
-  </div>
+{% block extra_css %}
+<style>
+    /* Reaproveitando o Fundo Animado e Estilos Básicos do Dashboard */
+    body {
+        background: linear-gradient(-45deg, #1A2980, #26D0CE, #005c97, #43cea2);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        min-height: 100vh;
+        /* Centraliza o conteúdo vertical e horizontalmente */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+    /* Glass Card igual ao Dashboard, mas adaptado para foco central */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.9); /* Um pouco mais opaco para leitura */
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
+        color: #1A2980;
+        padding: 40px;
+        max-width: 500px; /* Limita a largura do card */
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Ícone de Alerta */
+    .icon-box-danger {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545; /* Vermelho Bootstrap */
+        margin: 0 auto 25px auto;
+    }
+
+    /* Títulos */
+    .card-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .contact-name {
+        color: #f57c00; /* Cor de destaque (laranja do dashboard) */
+        font-weight: 800;
+        font-size: 1.2rem;
+    }
+
+    /* Botões Customizados */
+    .btn-glass-danger {
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 600;
+        transition: 0.3s;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .btn-glass-danger:hover {
+        background: #b02a37;
+        color: white;
+        transform: scale(1.02);
+    }
+
+    .btn-glass-secondary {
+        background: transparent;
+        border: 2px solid #6c757d;
+        color: #6c757d;
+        border-radius: 50px;
+        padding: 8px 25px;
+        font-weight: 600;
+        transition: 0.3s;
+        width: 100%;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-glass-secondary:hover {
+        background: #6c757d;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center">
+    <div class="glass-card">
+
+        <div class="icon-box-danger shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+
+        <h3 class="card-title">Confirmar Exclusão</h3>
+
+        <p class="text-muted mb-4" style="font-size: 1.1rem;">
+            Você está prestes a apagar permanentemente o contato de <br>
+            <span class="contact-name">"{{ object.nome }}"</span>.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-glass-danger">
+                <i class="bi bi-trash3-fill me-2"></i> Sim, Excluir Contato
+            </button>
+            <a href="{% url 'lista_contatos' %}" class="btn btn-glass-secondary">
+                Cancelar e Voltar
+            </a>
+        </form>
+
+    </div>
+</div>
 {% endblock %}
