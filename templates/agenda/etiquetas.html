@@ -81,14 +81,15 @@
         .page {
             width: 210mm;
             min-height: 297mm;
-            padding: 12mm 5mm; /* Margens padrão Pimaco */
+            padding: 12mm 5mm;
             margin: 0 auto;
             background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Sombra para parecer papel */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             display: grid;
             grid-template-columns: repeat(3, 1fr); /* 3 Colunas */
-            grid-auto-rows: 25.4mm; /* Altura exata da etiqueta (1 polegada) */
-            gap: 0; /* Pimaco geralmente não tem gap horizontal, ajustamos no padding da etiqueta */
+            /* Ajustado para caber todas as informações sem cortar */
+            grid-auto-rows: minmax(40mm, auto);
+            gap: 5mm; /* Adicionado um pequeno espaçamento visual */
         }
 
         /* A Etiqueta Individual */
@@ -96,12 +97,18 @@
             padding: 5px 10px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            font-family: Arial, sans-serif; /* Fonte legível para Correios */
-            font-size: 11px;
+            justify-content: flex-start;
+            font-family: Arial, sans-serif;
+            font-size: 10px; /* Reduzido levemente para caber mais dados */
             color: black;
-            border: 1px dashed #eee; /* Guia visual na tela apenas */
+            border: 1px dashed #ccc;
             overflow: hidden;
+            line-height: 1.3;
+        }
+
+        .etiqueta i {
+            margin-right: 3px;
+            color: #555;
         }
 
         /* -------------------------------------------
@@ -110,7 +117,7 @@
         @media print {
             @page {
                 size: A4;
-                margin: 0; /* Remove margens do navegador */
+                margin: 0;
             }
             body {
                 background: none;
@@ -119,7 +126,6 @@
                 padding: 0;
             }
 
-            /* Esconde a barra de botões e fundo */
             .no-print, .control-bar {
                 display: none !important;
             }
@@ -129,11 +135,12 @@
                 border: none;
                 box-shadow: none;
                 margin: 0;
-                padding: 12mm 5mm; /* Margem física da folha */
+                padding: 12mm 5mm;
+                gap: 0; /* Remove gap na impressão dependendo da folha adesiva */
             }
 
             .etiqueta {
-                border: none; /* Remove pontilhado */
+                border: none;
                 page-break-inside: avoid;
             }
         }
@@ -146,9 +153,9 @@
             <i class="bi bi-printer-fill"></i> Pré-visualização
         </div>
         <div>
-            <button onclick="window.close()" class="btn btn-voltar">
-                <i class="bi bi-x-lg"></i> Fechar
-            </button>
+            <a href="{% url 'dashboard' %}" class="btn btn-voltar">
+                <i class="bi bi-arrow-left"></i> Voltar ao Dashboard
+            </a>
 
             <button onclick="window.print()" class="btn btn-print">
                 <i class="bi bi-printer"></i> Imprimir Agora
@@ -159,22 +166,42 @@
     <div class="page">
         {% for contato in contatos %}
         <div class="etiqueta">
-            <div style="font-weight: bold; font-size: 12px; text-transform: uppercase;">
+            <div style="font-weight: bold; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; border-bottom: 1px solid #eee; padding-bottom: 2px;">
                 {{ contato.nome }}
             </div>
 
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px;">
+                {% if contato.telefone %}
+                    <span><i class="bi bi-telephone-fill"></i>{{ contato.telefone }}</span>
+                {% endif %}
+                {% if contato.data_nascimento %}
+                    <span><i class="bi bi-calendar-event-fill"></i>{{ contato.data_nascimento|date:"d/m/Y" }}</span>
+                {% endif %}
+            </div>
+
+            {% if contato.email %}
+                <div style="margin-bottom: 4px;">
+                    <i class="bi bi-envelope-fill"></i>{{ contato.email }}
+                </div>
+            {% endif %}
+
             {% if contato.turma %}
-                <div style="font-size: 10px; margin-bottom: 2px;">
-                    {{ contato.turma }}{% if contato.ano %} - {{ contato.ano }}{% endif %}
+                <div style="margin-bottom: 4px; color: #444;">
+                    <i class="bi bi-mortarboard-fill"></i>Turma: {{ contato.turma }}{% if contato.ano %} ({{ contato.ano }}){% endif %}
                 </div>
             {% endif %}
 
             <div style="margin-top: 2px;">
-                {{ contato.endereco }}, {{ contato.numero }} {{ contato.complemento }}<br>
-                {{ contato.bairro }}<br>
-                {{ contato.cidade }} - {{ contato.estado }}<br>
+                <i class="bi bi-geo-alt-fill"></i>{{ contato.endereco }}, {{ contato.numero }} {{ contato.complemento }}<br>
+                {{ contato.bairro }} - {{ contato.cidade }}/{{ contato.estado }}<br>
                 <strong>CEP: {{ contato.cep }}</strong>
             </div>
+
+            {% if contato.descricao %}
+                <div style="margin-top: 4px; font-size: 9px; font-style: italic; color: #666;">
+                    Obs: {{ contato.descricao|truncatechars:60 }}
+                </div>
+            {% endif %}
         </div>
         {% empty %}
             <div style="grid-column: 1/-1; text-align: center; padding: 50px; font-size: 14px; color: #666;">

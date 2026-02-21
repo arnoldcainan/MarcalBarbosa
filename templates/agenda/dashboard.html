@@ -132,16 +132,31 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+<div class="col-md-4">
         <div class="glass-card h-100">
-            <div class="p-4 border-bottom border-light">
-                <div class="d-flex align-items-center">
-                    <div class="icon-box icon-orange mb-0 me-3" style="width: 45px; height: 45px; font-size: 1.2rem;">
-                        <i class="bi bi-cake2-fill"></i>
+            <div class="p-4 border-bottom border-light d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="d-flex align-items-center">
+                        <div class="icon-box icon-orange mb-0 me-3" style="width: 45px; height: 45px; font-size: 1.2rem;">
+                            <i class="bi bi-cake2-fill"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0" style="color: #1A2980;">Aniversariantes</h5>
                     </div>
-                    <h5 class="fw-bold mb-0" style="color: #1A2980;">Aniversariantes</h5>
+                    <small class="text-muted ms-1">Próximos 7 dias</small>
                 </div>
-                <small class="text-muted ms-1">Próximos 7 dias</small>
+
+                {% if aniversariantes %}
+                <form action="{% url 'gerar_etiquetas' %}" method="POST" class="m-0">
+                    {% csrf_token %}
+                    {% for amigo in aniversariantes %}
+                        <input type="hidden" name="selection" value="{{ amigo.id }}">
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-sm btn-glass-outline" title="Imprimir lista de aniversariantes">
+                        <i class="bi bi-printer-fill"></i> Imprimir
+                    </button>
+                </form>
+                {% endif %}
             </div>
 
             <ul class="list-group list-group-flush">
